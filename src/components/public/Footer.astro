@@ -1,0 +1,69 @@
+---
+import { getSection } from '../../lib/content'
+const { brand_text, copyright } = getSection('footer')
+---
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>El<span>Edén</span></h3>
+        <p>{brand_text || 'Centro de Rehabilitación comprometido con la restauración integral de personas afectadas por el alcohol y las drogas.'}</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#quienes-somos">Quiénes Somos</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#instalaciones">Instalaciones</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Más</h4>
+        <ul>
+          <li><a href="#radio">Radio El Edén</a></li>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="#donaciones">Donaciones</a></li>
+          <li><a href="#">Yo Soy Socio</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Acceso</h4>
+        <ul>
+          <li><a href="/admin/dashboard">Sistema</a></li>
+          <li><a href="#">Correo Institucional</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>{copyright || '© 2026 Fundación El Edén. Todos los derechos reservados.'}</p>
+      <div class="footer-socials">
+        <a href="#" aria-label="Facebook">📘</a>
+        <a href="#" aria-label="Instagram">📷</a>
+        <a href="#" aria-label="YouTube">▶️</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { background: var(--green-900); padding: 48px 0 32px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-brand h3 { font-family: 'Playfair Display', serif; color: var(--white); font-size: 1.4rem; margin-bottom: 12px; }
+  .footer-brand h3 span { color: var(--gold); }
+  .footer-brand p { color: rgba(255,255,255,0.5); font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+  footer h4 { color: var(--white); font-size: 0.9rem; margin-bottom: 16px; font-family: 'Inter', sans-serif; font-weight: 600; }
+  footer ul { list-style: none; }
+  footer ul li { margin-bottom: 10px; }
+  footer ul a { color: rgba(255,255,255,0.5); font-size: 0.85rem; transition: var(--transition); }
+  footer ul a:hover { color: var(--gold); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .footer-bottom p { color: rgba(255,255,255,0.3); font-size: 0.8rem; }
+  .footer-socials { display: flex; gap: 16px; }
+  .footer-socials a { color: rgba(255,255,255,0.4); font-size: 1.2rem; transition: var(--transition); }
+  .footer-socials a:hover { color: var(--gold); }
+  @media (max-width: 968px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .footer-grid { grid-template-columns: 1fr; } }
+</style>

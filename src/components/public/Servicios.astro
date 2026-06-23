@@ -1,0 +1,65 @@
+---
+import { getSection, getSectionImages } from '../../lib/content'
+const { title, desc, hombre_title, hombre_text, mujer_title, mujer_text } = getSection('servicios')
+const images = getSectionImages('servicios')
+const hombreImg = images[0] || null
+const mujerImg = images[1] || null
+---
+
+<section id="servicios">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Nuestro Servicio</div>
+      <h2 class="section-title">{title || 'Programas de rehabilitación'}</h2>
+      {desc && <p class="section-desc">{desc}</p>}
+    </div>
+    <div class="servicios-grid">
+      <div class="servicio-card fade-in">
+        <div class="card-image">
+          {hombreImg ? <img src={hombreImg.filename} alt={hombreImg.alt || 'Hombres'} /> : <span>🧑</span>}
+        </div>
+        <div class="card-body">
+          <h3>{hombre_title || 'Rehabilitación para Hombres'}</h3>
+          <p>{hombre_text || 'Centros enfocados en el tratamiento del daño causado por el flagelo del alcohol y la droga, con un ambiente estructurado y de apoyo mutuo.'}</p>
+        </div>
+      </div>
+      <div class="servicio-card fade-in">
+        <div class="card-image">
+          {mujerImg ? <img src={mujerImg.filename} alt={mujerImg.alt || 'Mujeres'} /> : <span>👩</span>}
+        </div>
+        <div class="card-body">
+          <h3>{mujer_title || 'Rehabilitación para Mujeres'}</h3>
+          <p>{mujer_text || 'Sabemos que el proceso de rehabilitarse es una decisión importante, por lo que nos preocupamos de dar el mejor entorno que genere tranquilidad y confianza.'}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #servicios { background: var(--warm-gray); }
+  .servicios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-top: 48px; }
+  .servicio-card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); transition: var(--transition);
+    overflow: hidden;
+  }
+  .servicio-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+  .servicio-card .card-image {
+    width: 100%; height: 220px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+  }
+  .servicio-card .card-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .servicio-card:hover .card-image img { transform: scale(1.08); }
+  .servicio-card .card-body { padding: 36px; }
+  .servicio-card h3 {
+    font-size: 1.4rem; margin-bottom: 12px; color: var(--green-900);
+    font-family: 'Playfair Display', serif;
+  }
+  .servicio-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
+  @media (max-width: 968px) { .servicios-grid { grid-template-columns: 1fr; } }
+</style>

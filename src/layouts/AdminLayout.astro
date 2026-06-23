@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Fundación El Edén</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style is:global>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --sidebar: #0d2818;
+      --sidebar-hover: #143d26;
+      --bg: #0f0f1a;
+      --bg-card: #1a1a2e;
+      --bg-input: #252538;
+      --text: #e0e0e0;
+      --text-muted: #8888a0;
+      --gold: #d4a853;
+      --gold-hover: #c49a40;
+      --border: #2a2a3e;
+      --success: #2ecc71;
+      --error: #e74c3c;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.25s ease;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      padding: 28px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .sidebar-logo h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .sidebar-logo h2 span { color: var(--gold); }
+    .sidebar-logo small {
+      color: rgba(255,255,255,0.3);
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: var(--transition);
+      margin-bottom: 2px;
+    }
+    .sidebar-nav a:hover { background: var(--sidebar-hover); color: var(--white); }
+    .sidebar-nav a.active {
+      background: rgba(212,168,83,0.12);
+      color: var(--gold);
+    }
+    .sidebar-nav a .icon { font-size: 1.1rem; width: 24px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .sidebar-footer a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    .sidebar-footer a:hover { color: var(--white); }
+
+    .main {
+      margin-left: 260px;
+      flex: 1;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .topbar h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .topbar-right .username {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .topbar-right .logout-btn {
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .topbar-right .logout-btn:hover {
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    .content {
+      padding: 32px;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #000;
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    .btn-gold:hover { background: var(--gold-hover); }
+
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: white;
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s ease;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--error); }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 220px; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .content { padding: 24px 16px; }
+      .topbar { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>El<span>Edén</span></h2>
+      <small>Panel de administración</small>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard" class={Astro.url.pathname === '/admin/dashboard' ? 'active' : ''}>
+        <span class="icon">📊</span> Dashboard
+      </a>
+      <a href="/admin/sections/hero" class={Astro.url.pathname.startsWith('/admin/sections') ? 'active' : ''}>
+        <span class="icon">✏️</span> Editor de secciones
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/" target="_blank"><span class="icon">🔗</span> Ver sitio público</a>
+      <a href="/api/auth/logout"><span class="icon">🚪</span> Cerrar sesión</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>{Astro.props.title || 'Dashboard'}</h1>
+      <div class="topbar-right">
+        <span class="username">{Astro.props.username || ''}</span>
+        <form method="POST" action="/api/auth/logout" style="display:inline">
+          <button class="logout-btn" type="submit">Salir</button>
+        </form>
+      </div>
+    </div>
+    <div class="content">
+      <slot />
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // Sidebar toggle for mobile (auto-open on desktop)
+    const media = window.matchMedia('(max-width: 768px)');
+    const sidebar = document.getElementById('sidebar');
+    function handleMobile(e) {
+      if (!e.matches) sidebar.classList.remove('open');
+    }
+    media.addEventListener('change', handleMobile);
+
+    // Toast helper
+    window.showToast = function(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type + ' show';
+      setTimeout(() => t.classList.remove('show'), 3000);
+    };
+  </script>
+</body>
+</html>

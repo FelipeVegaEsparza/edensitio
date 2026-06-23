@@ -1,0 +1,209 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro'
+import { isAuthenticated, getToken, verifyToken } from '../../../lib/auth'
+import { getSection, getSectionImages } from '../../../lib/content'
+import { sectionConfig } from '../../../lib/config'
+
+if (!isAuthenticated(Astro)) {
+  return Astro.redirect('/login', 302)
+}
+
+const payload = verifyToken(getToken(Astro)!)
+const section = Astro.params.section || ''
+
+if (!sectionConfig[section]) {
+  return Astro.redirect('/admin/dashboard', 302)
+}
+
+const config = sectionConfig[section]
+const content = getSection(section)
+const sectionImages = getSectionImages(section)
+
+const carouselItems = sectionImages
+  .filter(i => i.field.startsWith('carousel_'))
+  .map(img => {
+    const idx = img.field.replace('carousel_', '')
+    return { ...img, idx, titleVal: content[`carousel_title_${idx}`] || '', descVal: content[`carousel_desc_${idx}`] || '' }
+  })
+
+const previewFields = config.fields
+  .map(field => ({ ...field, val: content[field.key] || '' }))
+  .filter(f => f.val)
+---
+
+<AdminLayout title={`Editando: ${config.label}`} username={payload?.username || ''}>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px">
+      <h2 style="font-size:1.1rem;font-weight:600;margin-bottom:24px;display:flex;align-items:center;gap:8px">
+        <span>{config.icon}</span> {config.label}
+      </h2>
+
+      <form id="contentForm">
+        {config.fields.map(field => <div style="margin-bottom:20px">
+          <label style="display:block;font-size:0.8rem;color:var(--text-muted);font-weight:500;margin-bottom:6px">{field.label}</label>
+          {field.type === 'textarea'
+            ? <textarea name={field.key} rows="4" style="width:100%;padding:12px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:0.85rem;resize:vertical;transition:0.25s ease">{content[field.key] || ''}</textarea>
+            : <input type="text" name={field.key} value={content[field.key] || ''} style="width:100%;padding:12px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Inter',sans-serif;font-size:0.85rem;transition:0.25s ease" />
+          }
+        </div>)}
+
+        {section === 'instalaciones' && carouselItems.length > 0 && <hr style="border:none;border-top:1px solid var(--border);margin:20px 0" />}
+        {section === 'instalaciones' && carouselItems.length > 0 && <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">🏷️ Nombres y descripciones</h3>}
+        {section === 'instalaciones' && carouselItems.length > 0 && <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">Edita el nombre y descripción para cada imagen de la galería.</p>}
+        {carouselItems.map(item => <div style="display:flex;gap:14px;margin-bottom:18px;background:var(--bg-input);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border)">
+          <img src={item.filename} alt="" style="width:80px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0" />
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <input type="text" name={`carousel_title_${item.idx}`} value={item.titleVal} placeholder="Nombre del espacio" style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.8rem" />
+            <textarea name={`carousel_desc_${item.idx}`} rows="2" placeholder="Descripción breve" style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.8rem;resize:vertical">{item.descVal}</textarea>
+          </div>
+        </div>)}
+
+        <button type="submit" class="btn-gold" style="width:100%;margin-top:8px" id="saveBtn">Guardar cambios</button>
+      </form>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:28px 0" />
+
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px">🖼️ Imágenes</h3>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">Sube una o varias imágenes.</p>
+
+      {sectionImages.length > 0 && <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px" id="imageGrid">
+        {sectionImages.map(img => <div style="background:var(--bg-input);border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);position:relative" data-id={img.id}>
+          <img src={img.filename} alt={img.alt} style="width:100%;height:120px;object-fit:cover;display:block" />
+          <div style="display:flex;justify-content:flex-end;padding:4px 8px;background:rgba(0,0,0,0.3);position:absolute;top:0;right:0;border-radius:0 0 0 6px">
+            <button class="del-image" data-id={img.id} style="background:none;border:none;color:#fff;font-size:1rem;cursor:pointer;padding:2px 6px">✕</button>
+          </div>
+        </div>)}
+      </div>}
+
+      <div style="border:2px dashed var(--border);border-radius:var(--radius-sm);padding:24px;text-align:center;transition:0.25s ease" id="imageDropZone">
+        <div style="font-size:2rem;margin-bottom:8px">📁</div>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px">Arrastra imágenes aquí o haz clic para seleccionar</p>
+        <input type="file" accept="image/*" id="imageFileInput" style="display:none" multiple />
+        <button type="button" class="btn-gold" id="imageUploadBtn" style="font-size:0.8rem;padding:8px 20px">+ Agregar imágenes</button>
+      </div>
+    </div>
+
+    <div style="position:sticky;top:100px">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:16px;color:var(--text-muted)">Vista previa</h3>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;min-height:300px">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">Los cambios se reflejarán aquí al guardar</div>
+        {previewFields.map(field => <div style="margin-bottom:12px">
+          <span style="font-size:0.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px">{field.label}</span>
+          <span style="font-size:0.9rem;color:var(--text);line-height:1.5;display:block">{field.val}</span>
+        </div>)}
+      </div>
+    </div>
+  </div>
+
+  <div id="section-data" data-section={section} style="display:none"></div>
+  <script>
+    const section = document.getElementById('section-data').dataset.section;
+    const form = document.getElementById('contentForm');
+    const saveBtn = document.getElementById('saveBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Guardando...';
+
+      const formData = new FormData(form);
+      const fields = {};
+      for (const [key, val] of formData.entries()) {
+        fields[key] = val;
+      }
+
+      try {
+        const res = await fetch('/api/content', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ section: section, fields }),
+        });
+        if (res.ok) {
+          window.showToast('✅ Cambios guardados correctamente', 'success');
+        } else {
+          window.showToast('❌ Error al guardar', 'error');
+        }
+      } catch {
+        window.showToast('❌ Error de conexión', 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Guardar cambios';
+      }
+    });
+
+    const dropZone = document.getElementById('imageDropZone');
+    const fileInput = document.getElementById('imageFileInput');
+    const uploadBtn = document.getElementById('imageUploadBtn');
+
+    uploadBtn.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--gold)';
+      dropZone.style.background = 'rgba(212,168,83,0.06)';
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.borderColor = 'var(--border)';
+      dropZone.style.background = 'transparent';
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--border)';
+      dropZone.style.background = 'transparent';
+      for (const f of e.dataTransfer.files) uploadImage(f);
+    });
+    fileInput.addEventListener('change', () => {
+      for (const f of fileInput.files) uploadImage(f);
+    });
+
+    async function uploadImage(file) {
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('section', section);
+      try {
+        const res = await fetch('/api/carousel', { method: 'POST', body: fd });
+        if (res.ok) {
+          window.showToast('✅ Imagen agregada', 'success');
+          setTimeout(() => location.reload(), 1200);
+        } else {
+          window.showToast('❌ Error al subir', 'error');
+        }
+      } catch {
+        window.showToast('❌ Error de conexión', 'error');
+      }
+    }
+
+    document.querySelectorAll('.del-image').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = parseInt(btn.dataset.id);
+        if (!confirm('¿Eliminar esta imagen?')) return;
+        try {
+          const res = await fetch('/api/carousel', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id }),
+          });
+          if (res.ok) {
+            window.showToast('✅ Imagen eliminada', 'success');
+            btn.closest('[data-id]').remove();
+          } else {
+            window.showToast('❌ Error al eliminar', 'error');
+          }
+        } catch {
+          window.showToast('❌ Error de conexión', 'error');
+        }
+      });
+    });
+  </script>
+</AdminLayout>
+
+<style>
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 3px rgba(212,168,83,0.1) !important;
+  }
+  textarea {
+    min-height: 80px;
+  }
+</style>

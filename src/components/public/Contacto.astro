@@ -1,0 +1,53 @@
+---
+import { getSection } from '../../lib/content'
+const { title, text, phone, email, address } = getSection('contacto')
+---
+
+<section id="contacto">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Contacto</div>
+      <h2 class="section-title">{title || 'Hablemos'}</h2>
+      <p class="section-desc">{text || '¿Tienes dudas o quieres más información? Escríbenos y te responderemos a la brevedad.'}</p>
+    </div>
+    <div class="contacto-grid">
+      <div class="contacto-info fade-in">
+        <h3>Información de contacto</h3>
+        <p>Estamos disponibles para atenderte y brindarte la orientación que necesites.</p>
+        {phone && <div class="contacto-item"><span class="emoji">📞</span><span>{phone}</span></div>}
+        {email && <div class="contacto-item"><span class="emoji">✉️</span><span>{email}</span></div>}
+        {address && <div class="contacto-item"><span class="emoji">📍</span><span>{address}</span></div>}
+        <div class="contacto-item"><span class="emoji">📻</span><span>Radio El Edén - 24/7</span></div>
+      </div>
+      <form class="contacto-form fade-in" data-astro-reload>
+        <input type="text" placeholder="Nombre completo" required>
+        <input type="email" placeholder="Correo electrónico" required>
+        <input type="tel" placeholder="Teléfono">
+        <textarea placeholder="¿Cómo podemos ayudarte?" required></textarea>
+        <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  #contacto { background: var(--white); }
+  .contacto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 48px; }
+  .contacto-info h3 { font-size: 1.3rem; color: var(--green-900); margin-bottom: 16px; }
+  .contacto-info p { color: var(--text-muted); margin-bottom: 24px; line-height: 1.7; }
+  .contacto-item { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: var(--text-muted); font-size: 0.95rem; }
+  .contacto-item .emoji { font-size: 1.2rem; }
+  .contacto-form input, .contacto-form textarea {
+    width: 100%; padding: 14px 18px; border: 1.5px solid #e5e5e5;
+    border-radius: var(--radius-sm); font-family: 'Inter', sans-serif;
+    font-size: 0.9rem; transition: var(--transition); background: var(--cream);
+    margin-bottom: 16px;
+  }
+  .contacto-form input:focus, .contacto-form textarea:focus {
+    outline: none; border-color: var(--green-600);
+    box-shadow: 0 0 0 3px rgba(46,204,113,0.1);
+  }
+  .contacto-form textarea { height: 120px; resize: vertical; }
+  .contacto-form .btn { width: 100%; justify-content: center; }
+  @media (max-width: 968px) { .contacto-grid { grid-template-columns: 1fr; } }
+</style>

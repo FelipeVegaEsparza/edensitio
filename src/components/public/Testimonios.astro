@@ -1,0 +1,44 @@
+---
+import { getSection } from '../../lib/content'
+const { title, quote, author_name, author_role } = getSection('testimonios')
+---
+
+<section id="testimonios">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Testimonios</div>
+      <h2 class="section-title">{title || 'Historias de transformación'}</h2>
+    </div>
+    <div class="testimonio-card fade-in">
+      <blockquote>{quote || 'El centro tiene un director general de tratamiento, quien es un exadicto rehabilitado. Él mismo lo cuenta como parte de su testimonio de vida y se ha capacitado profesionalmente en prevención y rehabilitación de adicciones al alcohol y las drogas.'}</blockquote>
+      <cite>
+        <div class="avatar">👤</div>
+        <div>
+          <strong>{author_name || 'Director General'}</strong>
+          <span>{author_role || 'Exadicto rehabilitado'}</span>
+        </div>
+      </cite>
+    </div>
+  </div>
+</section>
+
+<style>
+  #testimonios { background: var(--cream); }
+  .testimonio-card {
+    background: var(--white); border-radius: var(--radius); padding: 40px;
+    box-shadow: var(--shadow); max-width: 700px; margin: 48px auto 0; position: relative;
+  }
+  .testimonio-card::before {
+    content: '"'; font-family: 'Playfair Display', serif;
+    font-size: 5rem; color: var(--green-100);
+    position: absolute; top: 16px; left: 28px; line-height: 1;
+  }
+  .testimonio-card blockquote {
+    font-size: 1.1rem; color: var(--text-muted); line-height: 1.8;
+    font-style: italic; margin-bottom: 20px; padding-left: 32px;
+  }
+  .testimonio-card cite { display: flex; align-items: center; gap: 12px; font-style: normal; padding-left: 32px; }
+  .testimonio-card cite .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--green-100); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .testimonio-card cite strong { display: block; color: var(--green-900); font-size: 0.95rem; }
+  .testimonio-card cite span { font-size: 0.8rem; color: var(--text-muted); }
+</style>

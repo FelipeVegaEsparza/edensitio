@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/public/Header.astro'
+import Hero from '../components/public/Hero.astro'
+import QuienesSomos from '../components/public/QuienesSomos.astro'
+import Servicios from '../components/public/Servicios.astro'
+import Instalaciones from '../components/public/Instalaciones.astro'
+import Radio from '../components/public/Radio.astro'
+import Testimonios from '../components/public/Testimonios.astro'
+import Donaciones from '../components/public/Donaciones.astro'
+import Admision from '../components/public/Admision.astro'
+import Contacto from '../components/public/Contacto.astro'
+import Footer from '../components/public/Footer.astro'
+---
+
+<BaseLayout>
+  <Header />
+  <Hero />
+  <QuienesSomos />
+  <Servicios />
+  <Instalaciones />
+  <Radio />
+  <Testimonios />
+  <Admision />
+  <Donaciones />
+  <Contacto />
+  <Footer />
+
+  <a href="#" class="whatsapp-float" aria-label="WhatsApp" target="_blank">💬</a>
+</BaseLayout>
+
+<style>
+  .whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    background: #25d366;
+    color: white;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    transition: var(--transition);
+  }
+  .whatsapp-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 32px rgba(37,211,102,0.5);
+  }
+</style>

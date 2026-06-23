@@ -1,0 +1,73 @@
+---
+import { getSection, getSectionImages } from '../../lib/content'
+const { title, text_1, text_2, director_title, director_desc, floating_number, floating_label } = getSection('quienes_somos')
+const images = getSectionImages('quienes_somos')
+const img = images[0] || null
+---
+
+<section id="quienes-somos">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">Quiénes Somos</div>
+      <h2 class="section-title">{title || 'Una comunidad comprometida con la restauración'}</h2>
+    </div>
+    <div class="quienes-grid">
+      <div class="quienes-text fade-in">
+        <p>{text_1 || 'La comunidad cristiana para el tratamiento de adicciones Centro de Restauración El Edén se define como un espacio con ambiente comunitario residencial, libre de SPA (estupefacientes), en el que se cuenta con una estructura organizativa de normas y valores propios y el apoyo espiritual y terapéutico de un equipo interdisciplinar que busca, a través de etapas, la abstinencia total o el mejoramiento de la calidad de vida de los usuarios.'}</p>
+        {text_2 && <p>{text_2}</p>}
+        <div class="badge-director">
+          <div>👤</div>
+          <div>
+            <strong>{director_title || 'Director General de Tratamiento'}</strong>
+            <span>{director_desc || 'Exadicto rehabilitado, profesionalmente capacitado en prevención y rehabilitación de adicciones.'}</span>
+          </div>
+        </div>
+      </div>
+      <div class="quienes-image fade-in">
+        <div class="img-placeholder">
+          {img && <img src={img.filename} alt={img.alt} />}
+        </div>
+        <div class="floating-card">
+          <strong>{floating_number || '+500'}</strong>
+          <span>{floating_label || 'Vidas transformadas'}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #quienes-somos { background: var(--white); }
+  .quienes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 48px; }
+  .quienes-text p { color: var(--text-muted); margin-bottom: 20px; line-height: 1.8; font-size: 1rem; }
+  .quienes-text .badge-director {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--green-100); padding: 16px 24px;
+    border-radius: var(--radius-sm); margin-top: 16px;
+  }
+  .quienes-text .badge-director strong { color: var(--green-700); font-size: 0.9rem; display: block; }
+  .quienes-text .badge-director span { font-size: 0.8rem; color: var(--text-muted); }
+  .quienes-image { position: relative; }
+  .quienes-image .img-placeholder {
+    width: 100%; padding-bottom: 75%;
+    background: linear-gradient(135deg, var(--green-100), var(--warm-gray));
+    border-radius: var(--radius);
+    position: relative; overflow: hidden;
+  }
+  .quienes-image .img-placeholder img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+  .quienes-image .img-placeholder:empty::after {
+    content: '🌿';
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 4rem; opacity: 0.3;
+  }
+  .quienes-image .floating-card {
+    position: absolute; bottom: -20px; left: -20px;
+    background: var(--white); padding: 20px 28px;
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
+  }
+  .quienes-image .floating-card strong { display: block; font-size: 1.8rem; color: var(--green-700); font-family: 'Playfair Display', serif; }
+  .quienes-image .floating-card span { font-size: 0.8rem; color: var(--text-muted); }
+  @media (max-width: 968px) { .quienes-grid { grid-template-columns: 1fr; } }
+</style>

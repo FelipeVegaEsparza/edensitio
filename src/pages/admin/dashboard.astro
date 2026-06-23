@@ -1,0 +1,43 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro'
+import { isAuthenticated, getToken, verifyToken } from '../../lib/auth'
+import { getAllContent, getAllImages } from '../../lib/content'
+import { sectionConfig } from '../../lib/config'
+import type { APIContext } from 'astro'
+
+if (!isAuthenticated(Astro)) {
+  return Astro.redirect('/login', 302)
+}
+const payload = verifyToken(getToken(Astro)!)
+const allContent = getAllContent()
+const allImages = getAllImages()
+const sections = Object.entries(sectionConfig)
+---
+
+<AdminLayout title="Dashboard" username={payload?.username || ''}>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px">
+    {sections.map(([key, config]) => {
+      const content = allContent[key] || {}
+      const previewText = Object.values(content).find(v => v.length > 0) || ''
+      const preview = typeof previewText === 'string' ? previewText.slice(0, 100) : ''
+      return (
+        <a href={`/admin/sections/${key}`} style="text-decoration:none;color:inherit">
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:0.25s ease;cursor:pointer;height:100%">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <span style="font-size:1.8rem">{config.icon}</span>
+              <div>
+                <h3 style="font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:2px">{config.label}</h3>
+                <span style="font-size:0.75rem;color:var(--text-muted)">{config.fields.length} campos</span>
+              </div>
+            </div>
+            {preview && <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px">{preview}...</p>}
+            {!preview && <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px;font-style:italic">Sin contenido aún</p>}
+            {allImages[key] && Object.keys(allImages[key]).length > 0 && (
+              <p style="font-size:0.75rem;color:var(--gold);margin-top:12px">🖼️ {Object.keys(allImages[key]).length} imagen(es)</p>
+            )}
+          </div>
+        </a>
+      )
+    })}
+  </div>
+</AdminLayout>

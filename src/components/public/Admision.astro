@@ -1,0 +1,67 @@
+---
+import { getSection } from '../../lib/content'
+const { title, text, req_1, req_2, req_3, req_4, req_5, req_6, req_7, req_8 } = getSection('admision')
+const requisitos = [req_1, req_2, req_3, req_4, req_5, req_6, req_7, req_8].filter(Boolean)
+const icons = ['📄', '📝', '✅', '🔍', '📅', '👤', '📞', '🏥']
+---
+
+<section id="admision">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;margin-bottom:48px">
+      <div class="section-label">Admisión</div>
+      <h2 class="section-title">{title || 'Requisitos de Admisión'}</h2>
+      {text && <p class="section-desc" style="margin:0 auto">{text}</p>}
+    </div>
+    <div class="requisitos-grid">
+      {requisitos.map((req, i) => (
+        <div class="requisito-card fade-in">
+          <div class="requisito-icon">{icons[i % icons.length]}</div>
+          <p>{req}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #admision { background: var(--white); }
+  .requisitos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .requisito-card {
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: var(--transition);
+    border: 1px solid transparent;
+  }
+  .requisito-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+  .requisito-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--green-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .requisito-card p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    padding-top: 4px;
+  }
+</style>
