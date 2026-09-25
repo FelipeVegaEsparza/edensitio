@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/public/Header.astro'
+import PageHero from '../components/public/PageHero.astro'
+import Footer from '../components/public/Footer.astro'
+import { getSection } from '../lib/content'
+
+const d = getSection('donaciones')
+const title = d.title || 'Donaciones Mensuales'
+
+const planes = [1, 2, 3, 4, 5, 6].map(i => ({
+  amount: d[`amount_${i}`] || '',
+  label: d[`label_${i}`] || '',
+  url: d[`url_${i}`] || '#',
+})).filter(p => p.amount)
+
+const formatCLP = (v: string) => {
+  const n = parseInt(v.replace(/\D/g, ''), 10)
+  return isNaN(n) ? v : '$' + n.toLocaleString('es-CL')
+}
+---
+
+<BaseLayout title={`${title} – Fundación El Edén`} description="Apoya la rehabilitación de cientos de personas al año con una donación mensual o única a Fundación El Edén.">
+  <Header />
+  <PageHero
+    title={title}
+    subtitle={d.text}
+    label="Donaciones"
+    image="/images/donaciones-hero.jpg"
+  />
+
+  <section id="planes">
+    <div class="container">
+      <div class="planes-grid">
+        {planes.map((p, i) => (
+          <a href={p.url} target="_blank" rel="noopener" class={`plan-card fade-in${i === 3 ? ' featured' : ''}`}>
+            {i === 3 && <span class="plan-badge">Más elegido</span>}
+            <div class="plan-amount">{formatCLP(p.amount)}</div>
+            <span class="plan-label">{p.label}</span>
+            <span class="plan-period">mensual</span>
+            <span class="plan-btn">Donar</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="unica">
+    <div class="container">
+      <div class="unica-card fade-in">
+        <div>
+          <div class="section-label">Pago único</div>
+          <h2 class="section-title light">{d.single_title || 'Donación única'}</h2>
+          <p>{d.single_text}</p>
+        </div>
+        <a href={d.single_url || '#'} target="_blank" rel="noopener" class="btn btn-primary">{d.single_btn_text || 'Donar'}</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  #planes { background: var(--cream); }
+  .planes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .plan-card {
+    position: relative;
+    background: var(--white); border: 1.5px solid #ece6dc; border-radius: var(--radius);
+    padding: 36px 28px; text-align: center; transition: var(--transition); display: flex; flex-direction: column;
+  }
+  .plan-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--gold); }
+  .plan-card.featured { border-color: var(--gold); box-shadow: var(--shadow); }
+  .plan-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: var(--green-900); font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; padding: 5px 14px; border-radius: 50px;
+  }
+  .plan-amount { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--green-800); }
+  .plan-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; }
+  .plan-period { color: #bbb; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 20px; }
+  .plan-btn {
+    margin-top: auto; background: var(--green-900); color: var(--white);
+    padding: 12px; border-radius: 50px; font-weight: 600; font-size: 0.85rem; transition: var(--transition);
+  }
+  .plan-card:hover .plan-btn { background: var(--gold); color: var(--green-900); }
+
+  #unica { background: linear-gradient(135deg, var(--green-900), var(--green-800)); }
+  .unica-card {
+    display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;
+    max-width: 900px; margin: 0 auto;
+  }
+  .unica-card p { color: rgba(255,255,255,0.72); line-height: 1.75; font-size: 0.98rem; }
+  .btn-primary { background: var(--gold); color: var(--green-900); white-space: nowrap; }
+  @media (max-width: 968px) { .planes-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) {
+    .planes-grid { grid-template-columns: 1fr; }
+    .unica-card { grid-template-columns: 1fr; text-align: center; }
+    .unica-card .btn { justify-self: center; }
+  }
+</style>

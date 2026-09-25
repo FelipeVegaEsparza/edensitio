@@ -1,116 +1,62 @@
 ---
-import { getSection, getSectionImages } from '../../lib/content'
-const data = getSection('instalaciones')
-const title = data.title || ''
-const desc = data.desc || ''
-const images = getSectionImages('instalaciones')
+import { getSection } from '../../lib/content'
+const d = getSection('instalaciones')
+const title = d.title || 'Nuestros espacios'
+const desc = d.desc || ''
 
-const galleryItems = images.map(img => {
-  const idx = img.field.replace('carousel_', '')
-  return {
-    id: img.id,
-    filename: img.filename,
-    alt: img.alt,
-    name: data[`carousel_title_${idx}`] || `Espacio ${parseInt(idx) + 1}`,
-    description: data[`carousel_desc_${idx}`] || '',
-  }
-})
+const gallery = [
+  { src: '/images/instalacion-1.jpg', name: 'Espacios de descanso' },
+  { src: '/images/galeria-5.jpg', name: 'Zonas comunes' },
+  { src: '/images/instalacion-2.jpg', name: 'Patios y jardines' },
+  { src: '/images/galeria-7.jpg', name: 'Comedor comunitario' },
+  { src: '/images/instalacion-3.jpg', name: 'Salas de actividad' },
+  { src: '/images/galeria-8.jpg', name: 'Entorno natural' },
+]
 ---
 
 <section id="instalaciones">
   <div class="container">
     <div class="section-header fade-in">
       <div class="section-label" style="color: var(--gold);">Instalaciones</div>
-      <h2 class="section-title light">{title || 'Nuestros espacios'}</h2>
+      <h2 class="section-title light">{title}</h2>
       {desc && <p class="section-desc light">{desc}</p>}
     </div>
 
-    {galleryItems.length > 0 ? (
-      <div class="gallery-grid">
-        {galleryItems.map((item, i) => (
-          <div class="gallery-card fade-in">
-            <div class="gallery-image">
-              <img src={item.filename} alt={item.alt || item.name} loading="lazy" />
-            </div>
-            <div class="gallery-overlay">
-              <h3>{item.name}</h3>
-              {item.description && <p>{item.description}</p>}
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div class="placeholder-text">
-        <p style="color: rgba(255,255,255,0.4); text-align: center; font-size: 1rem; margin-top: 48px;">
-          Próximamente imágenes de nuestras instalaciones
-        </p>
-      </div>
-    )}
+    <div class="gallery-grid">
+      {gallery.map((item, i) => (
+        <div class="gallery-card fade-in">
+          <div class="gallery-image"><img src={item.src} alt={item.name} loading="lazy" /></div>
+          <div class="gallery-overlay"><h3>{item.name}</h3></div>
+        </div>
+      ))}
+    </div>
+
+    <div style="text-align:center;margin-top:40px">
+      <a href="/instalaciones-y-equipos" class="btn btn-outline">Conocer más</a>
+    </div>
   </div>
 </section>
 
 <style>
   #instalaciones { background: var(--green-900); padding: 100px 0; }
   .section-header { text-align: center; margin-bottom: 48px; }
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-  }
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
   .gallery-card {
-    position: relative;
-    border-radius: var(--radius);
-    overflow: hidden;
-    aspect-ratio: 4/3;
-    cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.06);
-    transition: var(--transition);
+    position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.06); transition: var(--transition);
   }
-  .gallery-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(212,168,83,0.25);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.3);
-  }
-  .gallery-image {
-    width: 100%;
-    height: 100%;
-  }
-  .gallery-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-  }
-  .gallery-card:hover .gallery-image img {
-    transform: scale(1.08);
-  }
+  .gallery-card:hover { transform: translateY(-6px); border-color: rgba(212,168,83,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+  .gallery-image { width: 100%; height: 100%; }
+  .gallery-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .gallery-card:hover .gallery-image img { transform: scale(1.08); }
   .gallery-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 24px;
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 24px;
     background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    transform: translateY(30px);
-    opacity: 0;
-    transition: var(--transition);
+    transform: translateY(20px); opacity: 0; transition: var(--transition);
   }
-  .gallery-card:hover .gallery-overlay {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  .gallery-overlay h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.15rem;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .gallery-overlay p {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.5;
-  }
-  @media (max-width: 768px) {
-    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-  }
+  .gallery-card:hover .gallery-overlay { transform: translateY(0); opacity: 1; }
+  .gallery-overlay h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); }
+  .btn-outline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.25); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+  @media (max-width: 768px) { .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; } }
 </style>

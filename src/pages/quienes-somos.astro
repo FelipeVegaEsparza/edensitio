@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/public/Header.astro'
+import PageHero from '../components/public/PageHero.astro'
+import Footer from '../components/public/Footer.astro'
+import { getSection } from '../lib/content'
+
+const d = getSection('quienes_somos')
+const title = d.title || 'Quiénes Somos'
+const intro = d.intro || ''
+const mision = d.mision || ''
+const vision = d.vision || ''
+const objetivos = d.objetivos || ''
+const directorTitle = d.director_title || ''
+const directorDesc = d.director_desc || ''
+const floatingNumber = d.floating_number || '+500'
+const floatingLabel = d.floating_label || 'Vidas transformadas'
+---
+
+<BaseLayout title={`${title} – Fundación El Edén`} description="Conoce la historia, misión, visión y objetivos de Fundación El Edén, comunidad cristiana de rehabilitación en Linares.">
+  <Header />
+  <PageHero
+    title={title}
+    subtitle="Una comunidad cristiana comprometida con la restauración integral de las personas."
+    label="Conócenos"
+    image="/images/quienes-somos-hero.jpg"
+  />
+
+  <section id="intro">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-text fade-in">
+          <div class="section-label">Nuestra comunidad</div>
+          <h2 class="section-title">{title}</h2>
+          <p>{intro}</p>
+          <div class="badge-director">
+            <div class="badge-icon">👤</div>
+            <div>
+              <strong>{directorTitle}</strong>
+              <span>{directorDesc}</span>
+            </div>
+          </div>
+        </div>
+        <div class="intro-image fade-in">
+          <img src="/images/comunidad-1.jpg" alt="Comunidad Fundación El Edén" loading="lazy" />
+          <div class="floating-card">
+            <strong>{floatingNumber}</strong>
+            <span>{floatingLabel}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mision-vision">
+    <div class="container">
+      <div class="mv-grid">
+        <div class="mv-card fade-in">
+          <div class="mv-icon">🎯</div>
+          <h3>{d.mision_title || 'Misión'}</h3>
+          <p>{mision}</p>
+        </div>
+        <div class="mv-card fade-in">
+          <div class="mv-icon">🔭</div>
+          <h3>{d.vision_title || 'Visión'}</h3>
+          <p>{vision}</p>
+        </div>
+      </div>
+
+      <div class="objetivo-card fade-in">
+        <div class="mv-icon">🌱</div>
+        <div>
+          <h3>{d.objetivos_title || 'Objetivos'}</h3>
+          <p>{objetivos}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  #intro { background: var(--white); }
+  .intro-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; align-items: center; }
+  .intro-text p { color: var(--text-muted); line-height: 1.85; margin-bottom: 24px; font-size: 1rem; }
+  .badge-director {
+    display: inline-flex; align-items: center; gap: 14px;
+    background: var(--green-100); padding: 18px 24px;
+    border-radius: var(--radius-sm); margin-top: 8px;
+  }
+  .badge-director .badge-icon { font-size: 1.4rem; }
+  .badge-director strong { color: var(--green-700); font-size: 0.92rem; display: block; }
+  .badge-director span { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+  .intro-image { position: relative; }
+  .intro-image img { width: 100%; height: 460px; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow-lg); }
+  .intro-image .floating-card {
+    position: absolute; bottom: -20px; left: -20px;
+    background: var(--white); padding: 20px 28px;
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
+  }
+  .intro-image .floating-card strong { display: block; font-size: 1.8rem; color: var(--green-700); font-family: 'Playfair Display', serif; }
+  .intro-image .floating-card span { font-size: 0.8rem; color: var(--text-muted); }
+
+  #mision-vision { background: var(--cream); }
+  .mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .mv-card {
+    background: var(--white); border-radius: var(--radius); padding: 40px;
+    box-shadow: var(--shadow); border-top: 3px solid var(--gold);
+  }
+  .mv-card .mv-icon { font-size: 2rem; margin-bottom: 16px; }
+  .mv-card h3 { color: var(--green-900); font-size: 1.35rem; margin-bottom: 14px; }
+  .mv-card p { color: var(--text-muted); line-height: 1.8; font-size: 0.95rem; }
+  .objetivo-card {
+    display: flex; gap: 24px; align-items: flex-start;
+    background: linear-gradient(135deg, var(--green-900), var(--green-800));
+    border-radius: var(--radius); padding: 40px; margin-top: 28px;
+  }
+  .objetivo-card h3 { color: var(--white); font-size: 1.35rem; margin-bottom: 14px; }
+  .objetivo-card p { color: rgba(255,255,255,0.75); line-height: 1.8; font-size: 0.98rem; }
+  @media (max-width: 968px) {
+    .intro-grid, .mv-grid { grid-template-columns: 1fr; }
+    .intro-image img { height: 360px; }
+    .objetivo-card { flex-direction: column; gap: 12px; }
+  }
+</style>

@@ -6,7 +6,14 @@ const {
   stats_lives, stats_lives_label,
   stats_centers, stats_centers_label,
 } = getSection('hero')
-const displayImages = getSectionImages('hero')
+const dbImages = getSectionImages('hero')
+const displayImages = dbImages.length > 0
+  ? dbImages
+  : [
+      { filename: '/images/comunidad-1.jpg', alt: 'Comunidad Fundación El Edén' },
+      { filename: '/images/instalacion-1.jpg', alt: 'Instalaciones Fundación El Edén' },
+      { filename: '/images/servicios-hero.jpg', alt: 'Proceso de rehabilitación' },
+    ]
 const isCarousel = displayImages.length > 1
 ---
 
@@ -18,8 +25,8 @@ const isCarousel = displayImages.length > 1
       <h1>{title || 'Fundación El Edén'}</h1>
       <p class="subtitle">{subtitle || 'Preocupados por rehabilitarte. Una comunidad cristiana de tratamiento y restauración para quienes buscan una nueva oportunidad.'}</p>
       <div class="hero-buttons">
-        <a href="#servicios" class="btn btn-primary">Conoce nuestros servicios</a>
-        <a href="#donaciones" class="btn btn-outline">Quiero ayudar</a>
+        <a href="/servicios" class="btn btn-primary">Conoce nuestros servicios</a>
+        <a href="/donaciones" class="btn btn-outline">Quiero ayudar</a>
       </div>
     </div>
     <div class="hero-visual fade-in">

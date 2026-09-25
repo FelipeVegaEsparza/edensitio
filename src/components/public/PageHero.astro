@@ -1,0 +1,71 @@
+---
+interface Props {
+  title: string
+  subtitle?: string
+  label?: string
+  image?: string
+}
+const { title, subtitle, label, image } = Astro.props
+---
+
+<section class="page-hero" style={image ? `--bg: url('${image}')` : undefined}>
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-pattern"></div>
+  <div class="container page-hero-content fade-in">
+    {label && <div class="page-hero-label">{label}</div>}
+    <h1>{title}</h1>
+    {subtitle && <p>{subtitle}</p>}
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding: 180px 0 90px;
+    background: linear-gradient(135deg, var(--green-900) 0%, var(--green-800) 45%, #0a1f12 100%);
+    overflow: hidden;
+  }
+  .page-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: var(--bg);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.22;
+  }
+  .page-hero-pattern {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 15% 90%, rgba(212,168,83,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 85% 10%, rgba(46,204,113,0.07) 0%, transparent 60%);
+  }
+  .page-hero-content { position: relative; z-index: 2; }
+  .page-hero-label {
+    display: inline-block;
+    background: rgba(212,168,83,0.15);
+    color: var(--gold-light);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(212,168,83,0.2);
+  }
+  .page-hero h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+  .page-hero p {
+    color: rgba(255,255,255,0.72);
+    font-size: 1.08rem;
+    max-width: 640px;
+    line-height: 1.7;
+  }
+  @media (max-width: 768px) {
+    .page-hero { padding: 140px 0 64px; }
+  }
+</style>

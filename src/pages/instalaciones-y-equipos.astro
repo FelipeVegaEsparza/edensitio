@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/public/Header.astro'
+import PageHero from '../components/public/PageHero.astro'
+import Footer from '../components/public/Footer.astro'
+import { getSection } from '../lib/content'
+
+const d = getSection('instalaciones')
+const title = d.title || 'Instalaciones y Profesionales'
+
+const galeria = [
+  { src: '/images/instalacion-1.jpg', alt: 'Instalaciones Fundación El Edén' },
+  { src: '/images/galeria-4.jpg', alt: 'Dormitorios comunitarios' },
+  { src: '/images/galeria-5.jpg', alt: 'Espacios comunes' },
+  { src: '/images/galeria-6.jpg', alt: 'Zonas de convivencia' },
+  { src: '/images/instalacion-2.jpg', alt: 'Patio y jardines' },
+  { src: '/images/galeria-7.jpg', alt: 'Comedor' },
+  { src: '/images/instalacion-3.jpg', alt: 'Sala de actividades' },
+  { src: '/images/galeria-8.jpg', alt: 'Entorno natural' },
+  { src: '/images/galeria-a.jpg', alt: 'Terapia grupal' },
+  { src: '/images/galeria-b.jpg', alt: 'Actividades recreativas' },
+  { src: '/images/galeria-c.jpg', alt: 'Vida en comunidad' },
+  { src: '/images/galeria-d.jpg', alt: 'Talleres' },
+  { src: '/images/galeria-e.jpg', alt: 'Espacios al aire libre' },
+  { src: '/images/galeria-f.jpg', alt: 'Reunión de grupo' },
+  { src: '/images/galeria-g.jpg', alt: 'Actividades diarias' },
+  { src: '/images/galeria-h.jpg', alt: 'Comunidad El Edén' },
+]
+---
+
+<BaseLayout title={`${title} – Fundación El Edén`} description="Conoce las instalaciones, el equipo de profesionales y los principios de operación de la comunidad de Fundación El Edén.">
+  <Header />
+  <PageHero
+    title={title}
+    subtitle="Espacios y un equipo pensados para acompañar cada etapa del proceso."
+    label="Instalaciones"
+    image="/images/instalacion-1.jpg"
+  />
+
+  <section id="profesionales">
+    <div class="container">
+      <div class="prof-grid">
+        <div class="fade-in">
+          <div class="section-label">Equipo</div>
+          <h2 class="section-title">{d.profesionales_title || 'Profesionales'}</h2>
+          <p class="body-text">{d.profesionales_text}</p>
+          <div class="persona-box">
+            <h3>{d.persona_title || 'Concepción de la persona'}</h3>
+            <p>{d.persona_text}</p>
+          </div>
+        </div>
+        <div class="fade-in">
+          <img src="/images/profesionales.jpg" alt="Equipo profesional Fundación El Edén" loading="lazy" class="prof-img" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="instalaciones-galeria">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="section-label" style="color: var(--gold);">Espacios</div>
+        <h2 class="section-title light">{d.title || 'Instalaciones'}</h2>
+        {d.ubicacion_text && <p class="section-desc light">{d.ubicacion_text}</p>}
+      </div>
+      <div class="gallery-grid">
+        {galeria.map((item, i) => (
+          <a href={item.src} target="_blank" rel="noopener" class={`gallery-card fade-in${i % 5 === 0 ? ' wide' : ''}`}>
+            <img src={item.src} alt={item.alt} loading="lazy" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="principios">
+    <div class="container">
+      <div class="fade-in" style="text-align:center">
+        <div class="section-label">Comunidad</div>
+        <h2 class="section-title">{d.principios_title || 'Principios de operación de la comunidad'}</h2>
+      </div>
+      <div class="principios-grid">
+        {[d.principios_text_1, d.principios_text_2, d.principios_text_3].filter(Boolean).map((t, i) => (
+          <div class="principio-card fade-in">
+            <span class="num">0{i + 1}</span>
+            <p>{t}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  #profesionales { background: var(--white); }
+  .prof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .body-text { color: var(--text-muted); line-height: 1.8; font-size: 1rem; margin-bottom: 24px; }
+  .persona-box { background: var(--green-100); border-radius: var(--radius-sm); padding: 24px; }
+  .persona-box h3 { color: var(--green-700); font-size: 1.05rem; margin-bottom: 8px; }
+  .persona-box p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; }
+  .prof-img { width: 100%; height: 460px; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow-lg); }
+
+  #instalaciones-galeria { background: var(--green-900); }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-header .section-desc { margin: 0 auto; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .gallery-card { position: relative; border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 1; display: block; }
+  .gallery-card.wide { grid-column: span 2; grid-row: span 2; }
+  .gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+  .gallery-card:hover img { transform: scale(1.08); }
+  .gallery-card::after {
+    content: '⤢'; position: absolute; top: 10px; right: 12px;
+    color: white; opacity: 0; transition: var(--transition); font-size: 1rem;
+  }
+  .gallery-card:hover::after { opacity: 0.8; }
+
+  #principios { background: var(--cream); }
+  .principios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .principio-card { background: var(--white); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); border-top: 3px solid var(--gold); }
+  .principio-card .num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--green-100); font-weight: 700; display: block; margin-bottom: 12px; }
+  .principio-card p { color: var(--text-muted); line-height: 1.8; font-size: 0.92rem; }
+
+  @media (max-width: 1024px) {
+    .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+    .principios-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 968px) { .prof-grid { grid-template-columns: 1fr; } .prof-img { height: 360px; } }
+  @media (max-width: 640px) {
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-card.wide { grid-column: span 2; grid-row: span 1; }
+  }
+</style>

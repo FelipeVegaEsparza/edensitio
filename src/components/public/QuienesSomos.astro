@@ -1,8 +1,6 @@
 ---
-import { getSection, getSectionImages } from '../../lib/content'
-const { title, text_1, text_2, director_title, director_desc, floating_number, floating_label } = getSection('quienes_somos')
-const images = getSectionImages('quienes_somos')
-const img = images[0] || null
+import { getSection } from '../../lib/content'
+const { title, intro, mision, director_title, director_desc, floating_number, floating_label } = getSection('quienes_somos')
 ---
 
 <section id="quienes-somos">
@@ -13,8 +11,8 @@ const img = images[0] || null
     </div>
     <div class="quienes-grid">
       <div class="quienes-text fade-in">
-        <p>{text_1 || 'La comunidad cristiana para el tratamiento de adicciones Centro de Restauración El Edén se define como un espacio con ambiente comunitario residencial, libre de SPA (estupefacientes), en el que se cuenta con una estructura organizativa de normas y valores propios y el apoyo espiritual y terapéutico de un equipo interdisciplinar que busca, a través de etapas, la abstinencia total o el mejoramiento de la calidad de vida de los usuarios.'}</p>
-        {text_2 && <p>{text_2}</p>}
+        <p>{intro || 'La comunidad cristiana para el tratamiento de adicciones Centro de Restauración El Edén se define como un espacio con ambiente comunitario residencial, libre de SPA (estupefacientes), con una estructura organizativa de normas y valores propios y el apoyo espiritual y terapéutico de un equipo interdisciplinar.'}</p>
+        {mision && <p>{mision}</p>}
         <div class="badge-director">
           <div>👤</div>
           <div>
@@ -22,10 +20,11 @@ const img = images[0] || null
             <span>{director_desc || 'Exadicto rehabilitado, profesionalmente capacitado en prevención y rehabilitación de adicciones.'}</span>
           </div>
         </div>
+        <a href="/quienes-somos" class="btn btn-primary" style="margin-top:24px">Leer más</a>
       </div>
       <div class="quienes-image fade-in">
         <div class="img-placeholder">
-          {img && <img src={img.filename} alt={img.alt} />}
+          <img src="/images/comunidad-1.jpg" alt="Comunidad Fundación El Edén" loading="lazy" />
         </div>
         <div class="floating-card">
           <strong>{floating_number || '+500'}</strong>
@@ -47,6 +46,7 @@ const img = images[0] || null
   }
   .quienes-text .badge-director strong { color: var(--green-700); font-size: 0.9rem; display: block; }
   .quienes-text .badge-director span { font-size: 0.8rem; color: var(--text-muted); }
+  .btn-primary { background: var(--gold); color: var(--green-900); }
   .quienes-image { position: relative; }
   .quienes-image .img-placeholder {
     width: 100%; padding-bottom: 75%;
@@ -56,11 +56,6 @@ const img = images[0] || null
   }
   .quienes-image .img-placeholder img {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  }
-  .quienes-image .img-placeholder:empty::after {
-    content: '🌿';
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 4rem; opacity: 0.3;
   }
   .quienes-image .floating-card {
     position: absolute; bottom: -20px; left: -20px;

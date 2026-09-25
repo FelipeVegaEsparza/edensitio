@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/public/Header.astro'
+import PageHero from '../components/public/PageHero.astro'
+import Footer from '../components/public/Footer.astro'
+import { getSection } from '../lib/content'
+
+const d = getSection('yo_soy_socio')
+const title = d.title || 'Yo Soy Socio'
+---
+
+<BaseLayout title={`${title} – Fundación El Edén`} description="Súmate como socio de Fundación El Edén y ayuda a quienes necesitan rehabilitarse.">
+  <Header />
+  <PageHero title={title} subtitle="Tu aporte hace posible que muchas personas recuperen su vida." label="Súmate" image="/images/comunidad-1.jpg" />
+
+  <section id="socio">
+    <div class="container">
+      <div class="socio-grid">
+        <div class="socio-text fade-in">
+          <p>{d.text_1}</p>
+          <p>{d.text_2}</p>
+          <a href="/donaciones" class="btn btn-primary">Quiero ser socio</a>
+        </div>
+        <div class="socio-feature fade-in">
+          <img src="/images/socio-luis.jpeg" alt={d.socio_name || 'Socio Fundación El Edén'} loading="lazy" />
+          <div class="socio-card">
+            <span class="socio-tag">Primer socio</span>
+            <h3>{d.socio_name}</h3>
+            <p>{d.socio_desc}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  #socio { background: var(--white); }
+  .socio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .socio-text p { color: var(--text-muted); line-height: 1.85; font-size: 1.02rem; margin-bottom: 20px; }
+  .socio-text .btn { margin-top: 12px; }
+  .btn-primary { background: var(--gold); color: var(--green-900); }
+  .socio-feature { position: relative; }
+  .socio-feature img { width: 100%; height: 480px; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow-lg); }
+  .socio-card {
+    position: absolute; bottom: -24px; left: -24px; right: 40px;
+    background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-lg);
+    border-left: 3px solid var(--gold);
+  }
+  .socio-tag { display: inline-block; background: var(--green-100); color: var(--green-700); font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 5px 12px; border-radius: 50px; margin-bottom: 10px; }
+  .socio-card h3 { color: var(--green-900); font-size: 1.15rem; margin-bottom: 8px; }
+  .socio-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
+  @media (max-width: 968px) {
+    .socio-grid { grid-template-columns: 1fr; gap: 80px; }
+    .socio-card { left: 16px; right: 16px; }
+  }
+</style>

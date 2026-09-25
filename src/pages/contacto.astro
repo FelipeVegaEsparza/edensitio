@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/public/Header.astro'
+import PageHero from '../components/public/PageHero.astro'
+import Footer from '../components/public/Footer.astro'
+import { getSection } from '../lib/content'
+
+const d = getSection('contacto')
+const title = d.title || 'Contáctanos'
+
+const wa = (v: string) => 'https://wa.me/' + (v || '').replace(/\D/g, '')
+
+const direcciones = [
+  { label: d.address_label_1, value: d.address_1 },
+  { label: d.address_label_2, value: d.address_2 },
+  { label: d.address_label_3, value: d.address_3 },
+  { label: d.address_label_4, value: d.address_4 },
+].filter(a => a.value)
+---
+
+<BaseLayout title={`${title} – Fundación El Edén`} description="Contáctanos por WhatsApp, correo o visítanos en nuestras sucursales en Linares.">
+  <Header />
+  <PageHero title={title} subtitle={d.text} label="Contacto" image="/images/comunidad-1.jpg" />
+
+  <section id="contacto">
+    <div class="container">
+      <div class="contacto-grid">
+        <div class="contacto-info fade-in">
+          <h3>Información de contacto</h3>
+          <p>Estamos disponibles para orientarte y responder todas tus consultas.</p>
+
+          <div class="channels">
+            {d.email && (
+              <a class="channel" href={`mailto:${d.email}`}>
+                <span class="ch-icon">✉️</span>
+                <span><strong>Email</strong>{d.email}</span>
+              </a>
+            )}
+            {d.whatsapp_masculino && (
+              <a class="channel" href={wa(d.whatsapp_masculino)} target="_blank" rel="noopener">
+                <span class="ch-icon">💬</span>
+                <span><strong>WhatsApp Masculino</strong>{d.whatsapp_masculino}</span>
+              </a>
+            )}
+            {d.whatsapp_femenino && (
+              <a class="channel" href={wa(d.whatsapp_femenino)} target="_blank" rel="noopener">
+                <span class="ch-icon">💬</span>
+                <span><strong>WhatsApp Femenino</strong>{d.whatsapp_femenino}</span>
+              </a>
+            )}
+          </div>
+
+          <h4 class="dir-title">Nuestras sedes</h4>
+          <ul class="dir-list">
+            {direcciones.map(dir => (
+              <li><span class="ch-icon">📍</span><span><strong>{dir.label}</strong>{dir.value}</span></li>
+            ))}
+          </ul>
+          {d.note && <p class="note">{d.note}</p>}
+        </div>
+
+        <form class="contacto-form fade-in" id="contactForm">
+          <h3>Envíanos un mensaje</h3>
+          <input type="text" name="nombre" placeholder="Nombre completo" required>
+          <input type="email" name="email" placeholder="Correo electrónico" required>
+          <input type="tel" name="telefono" placeholder="Teléfono">
+          <textarea name="consulta" placeholder="¿Cómo podemos ayudarte?" required></textarea>
+          <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+          <p class="form-hint">Al enviar, se abrirá tu correo con el mensaje listo para {d.email || 'contacto@fundacioneleden.cl'}.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contactForm') as HTMLFormElement | null
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const fd = new FormData(form)
+    const email = 'contacto@fundacioneleden.cl'
+    const subject = encodeURIComponent(`Consulta de ${fd.get('nombre')}`)
+    const body = encodeURIComponent(`Nombre: ${fd.get('nombre')}\nCorreo: ${fd.get('email')}\nTeléfono: ${fd.get('telefono')}\n\n${fd.get('consulta')}`)
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`
+  })
+</script>
+
+<style>
+  #contacto { background: var(--white); }
+  .contacto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+  .contacto-info h3 { font-size: 1.4rem; color: var(--green-900); margin-bottom: 12px; }
+  .contacto-info > p { color: var(--text-muted); margin-bottom: 28px; line-height: 1.7; }
+  .channels { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .channel {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--cream); border-radius: var(--radius-sm); padding: 16px 20px; transition: var(--transition);
+  }
+  .channel:hover { background: var(--green-100); transform: translateX(4px); }
+  .channel .ch-icon { font-size: 1.3rem; }
+  .channel span:last-child { display: flex; flex-direction: column; color: var(--text-muted); font-size: 0.9rem; }
+  .channel strong { color: var(--green-800); font-size: 0.95rem; margin-bottom: 2px; font-weight: 600; }
+  .dir-title { color: var(--green-900); font-size: 1.05rem; margin-bottom: 16px; }
+  .dir-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .dir-list li { display: flex; gap: 14px; align-items: flex-start; }
+  .dir-list span:last-child { display: flex; flex-direction: column; color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; }
+  .dir-list strong { color: var(--green-800); font-size: 0.9rem; margin-bottom: 2px; }
+  .note { margin-top: 18px; font-size: 0.85rem; color: var(--green-700); background: var(--green-100); padding: 12px 16px; border-radius: var(--radius-sm); }
+
+  .contacto-form { background: var(--cream); border-radius: var(--radius); padding: 36px; }
+  .contacto-form h3 { color: var(--green-900); font-size: 1.2rem; margin-bottom: 20px; }
+  .contacto-form input, .contacto-form textarea {
+    width: 100%; padding: 14px 18px; border: 1.5px solid #e5e5e5; border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: var(--transition); background: var(--white);
+    margin-bottom: 16px;
+  }
+  .contacto-form input:focus, .contacto-form textarea:focus { outline: none; border-color: var(--green-600); box-shadow: 0 0 0 3px rgba(46,204,113,0.12); }
+  .contacto-form textarea { height: 130px; resize: vertical; }
+  .contacto-form .btn { width: 100%; justify-content: center; }
+  .contacto-form .form-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 12px; text-align: center; line-height: 1.5; }
+  .btn-primary { background: var(--gold); color: var(--green-900); }
+  @media (max-width: 968px) { .contacto-grid { grid-template-columns: 1fr; gap: 40px; } }
+</style>

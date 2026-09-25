@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Header from '../components/public/Header.astro'
+import PageHero from '../components/public/PageHero.astro'
+import Footer from '../components/public/Footer.astro'
+import { getSection } from '../lib/content'
+
+const d = getSection('videos')
+const title = d.title || 'Videos'
+
+function toEmbed(url: string): string {
+  if (!url) return ''
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/)
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`
+  const vimeo = url.match(/vimeo\.com\/(\d+)/)
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`
+  return url
+}
+
+const videos = [d.video_1_url, d.video_2_url, d.video_3_url]
+  .filter(Boolean)
+  .map(toEmbed)
+---
+
+<BaseLayout title={`${title} – Fundación El Edén`} description="Material audiovisual y testimonios de Fundación El Edén.">
+  <Header />
+  <PageHero title={title} subtitle={d.text} label="Multimedia" image="/images/comunidad-1.jpg" />
+
+  <section id="videos">
+    <div class="container">
+      {videos.length > 0 ? (
+        <div class="videos-grid">
+          {videos.map(url => (
+            <div class="video-card fade-in">
+              <iframe src={url} title="Video Fundación El Edén" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="empty fade-in">
+          <div class="empty-icon">🎬</div>
+          <h3>Próximamente</h3>
+          <p>{d.text || 'Estamos preparando material audiovisual de nuestra comunidad y de los testimonios de quienes han transformado su vida.'}</p>
+          <a href="/contacto" class="btn btn-primary">Contáctanos</a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  #videos { background: var(--cream); min-height: 50vh; }
+  .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 28px; }
+  .video-card { position: relative; padding-bottom: 56.25%; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: var(--green-900); }
+  .video-card iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+  .empty { text-align: center; max-width: 520px; margin: 0 auto; padding: 40px 0; }
+  .empty-icon { font-size: 3.5rem; margin-bottom: 16px; }
+  .empty h3 { color: var(--green-900); font-size: 1.6rem; margin-bottom: 12px; }
+  .empty p { color: var(--text-muted); line-height: 1.7; margin-bottom: 28px; }
+  .btn-primary { background: var(--gold); color: var(--green-900); }
+</style>
