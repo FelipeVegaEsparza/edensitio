@@ -109,8 +109,8 @@ const defaults = {
     title: 'Estamos online 24/7',
     text: 'Acompañamos tu proceso de recuperación también a través de nuestra señal radial con contenido edificante.',
     status_text: 'En vivo',
-    btn_text: '🎧 Escuchar ahora',
-    btn_url: 'https://apps.hover.cl/app/933f60aaddc7459d',
+    btn_text: 'Escuchar la radio en vivo',
+    btn_url: 'https://eleden.ipstream.cl/',
   },
   videos: {
     title: 'Videos',
@@ -202,6 +202,12 @@ for (const [section, fields] of Object.entries(defaults)) {
     stmt.run(section, field, value)
   }
 }
+
+// One-time migration: point existing radio installs to the new stream URL.
+db.prepare(`
+  UPDATE content SET value = ?, updated_at = datetime('now')
+  WHERE section = 'radio' AND field = 'btn_url' AND value LIKE '%hover.cl%'
+`).run(defaults.radio.btn_url)
 
 // Create admin user
 const adminUser = process.env.ADMIN_USER || 'admin'

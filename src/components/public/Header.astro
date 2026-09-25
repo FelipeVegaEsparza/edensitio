@@ -28,6 +28,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/')
       {navItems.map(item => (
         <li><a href={item.href} class={isActive(item.href) ? 'active' : ''}>{item.label}</a></li>
       ))}
+      <li><a href="/#radio" class="nav-radio"><span class="nav-radio-dot"></span>Radio en vivo</a></li>
       <li><a href="/donaciones" class="nav-donate">{donate}</a></li>
     </ul>
   </div>
@@ -95,6 +96,32 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/')
   .nav-links a.active::after { width: 100%; }
   .nav-links a:hover,
   .nav-links a.active { color: var(--gold); }
+  .nav-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(212,168,83,0.45);
+    color: var(--gold) !important;
+    font-weight: 600;
+    background: rgba(212,168,83,0.08);
+  }
+  .nav-radio::after { display: none !important; }
+  .nav-radio:hover {
+    background: rgba(212,168,83,0.18);
+    border-color: var(--gold);
+    color: var(--gold-light) !important;
+  }
+  .nav-radio-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green-500);
+    animation: navBlink 1.5s ease-in-out infinite;
+  }
+  @keyframes navBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  nav.scrolled .nav-radio { color: var(--green-800) !important; }
+  nav.scrolled .nav-radio:hover { color: var(--green-700) !important; }
   .nav-donate {
     background: var(--gold);
     color: var(--green-900) !important;
